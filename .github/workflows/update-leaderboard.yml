@@ -1,0 +1,47 @@
+# 워크플로우의 이름 (GitHub 'Actions' 탭에 표시됨)
+name: Update Leaderboard HTML
+
+# 워크플로우를 실행할 조건 (Trigger)
+on:
+  push:
+    branches:
+      - main  # main 브랜치에 push 될 때만 실행
+    paths:
+      - 'results.csv' # results.csv 파일이 변경되었을 때만 실행
+
+# 실행될 작업(Job) 목록
+jobs:
+  build:
+    # 작업이 실행될 가상 환경
+    runs-on: ubuntu-latest
+
+    # 작업의 단계(Step) 목록
+    steps:
+      # 1. 저장소의 코드를 가상 환경으로 가져옴 (Checkout)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. 파이썬 환경 설정
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' # 필요에 따라 버전 변경 가능
+
+      # 3. 파이썬 라이브러리 설치
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas jinja2
+
+      # 4. 리더보드 HTML 생성 스크립트 실행
+      - name: Generate leaderboard HTML
+        run: python generate_leaderboard.py
+
+      # 5. 변경된 index.html 파일을 자동으로 커밋하고 푸시
+      - name: Commit and push if changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: 🤖 Automated leaderboard update"
+          file_pattern: index.html
+          commit_user_name: github-actions[bot]
+          commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
