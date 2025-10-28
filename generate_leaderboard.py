@@ -2,7 +2,6 @@ import pandas as pd
 from jinja2 import Environment, FileSystemLoader
 import os
 
-# HTML 템플릿 파일명 및 출력 파일명 설정
 TEMPLATE_FILE = "leaderboard_template.html"
 OUTPUT_FILE = "index.html"
 CSV_FILE = "results.csv"
