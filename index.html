@@ -176,18 +176,85 @@
             </tbody>
         </table>
     </div>
-    <div class="container" style="margin-top: 2rem; text-align: center;">
+    <div class="container" style="margin-top: 2rem;">
         <hr>
-        <p>If you want to add your own operation to the leaderboard, please contact us using the methods below.</p>
-        <p>
-            Email: <a href="mailto:dafaafafaf33@gmail.com">dafaafafaf33@gmail.com</a>
-        </p>
-        <p>
-            Discord: <a href="https://discord.gg/tfuYKTGTk5" target="_blank">https://discord.gg/tfuYKTGTk5</a>
-        </p>
-        <p>
-            You can also add it from this <a href="https://docs.google.com/forms/d/e/1FAIpQLSfudCq_YnUZVo33LSvARehYStfw3ulPlya4Xse6yYd3RDCLTw/viewform?usp=dialog" target="_blank">link</a>.
-        </p>
+        <h2>Official Submission Guidelines</h2>
+        <p>To ensure that all submissions to "The Architect's Arena" are fair, consistent, and reproducible, all participants must adhere to the following official benchmarking rules.</p>
+
+        <h4>1. Core Environment</h4>
+        <p>Your submission will be evaluated based on its performance under this specific, standardized environment.</p>
+        <ul>
+            <li><strong>Dataset:</strong> <code>CIFAR-10</code>
+                <ul>
+                    <li>All models will be trained on the official CIFAR-10 training set and evaluated on the official test set. Standard data transformations (normalization, random horizontal flip, random crop) provided by the default <code>CIFAR10Dataset</code> class in the benchmark package are applied.</li>
+                </ul>
+            </li>
+            <li><strong>Evaluator:</strong> <code>gwo_benchmark.Evaluator</code>
+                <ul>
+                    <li>You must use the default <code>Evaluator</code> provided within the package. Custom evaluators are not permitted for official leaderboard submissions to maintain a level playing field in the training and evaluation loop.</li>
+                </ul>
+            </li>
+            <li><strong>Training Configuration:</strong>
+                <ul>
+                    <li>The <code>train_config</code> dictionary passed to the <code>Evaluator</code> must exactly match the following parameters:
+<pre><code>train_config = {
+    "epochs": 30,
+    "lr": 0.001,
+    "momentum": 0.9,
+    "batch_size": 64
+}
+</code></pre>
+                    </li>
+                    <li>The optimizer used by the default <code>Evaluator</code> is <strong>Stochastic Gradient Descent (SGD)</strong>. No learning rate schedulers, weight decay modifications, or alternative optimizers (e.g., Adam) are allowed in the official track.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h4>2. Model Implementation (<code>GWOModule</code>)</h4>
+        <p>Your model must adhere to the <code>GWOModule</code> interface to allow for automated complexity calculation and evaluation.</p>
+        <ul>
+            <li><strong>Inheritance:</strong> Your model must inherit from <code>gwo_benchmark.base.GWOModule</code>.</li>
+            <li><strong>Descriptive Complexity (<code>C_D</code>):</strong> You must define the <code>C_D</code> class variable as a static integer. This value should be calculated honestly, based on the Official Primitive Dictionary provided in the README. Your reasoning for the chosen <code>C_D</code> value should be included as comments in your code or in your submission description.</li>
+            <li><strong>Parametric Complexity (<code>C_P</code>):</strong> You must correctly implement the <code>get_parametric_complexity_modules()</code> method. This method should return a list of all <code>nn.Module</code>s whose parameters contribute to the <em>dynamic generation</em> of the operation (e.g., offset prediction networks), not the primary weights of the operation itself (like the convolutional kernel).</li>
+        </ul>
+
+        <h4>3. Submission Process</h4>
+        <ol>
+            <li><strong>Prepare Your Code:</strong> Ensure your <code>GWOModule</code> implementation is clean, commented, and ready for review.</li>
+            <li><strong>Run Locally (Optional but Recommended):</strong> Run the benchmark on your local machine to verify that your model trains correctly and to get a preliminary idea of its performance.</li>
+            <li><strong>Submit via Google Form:</strong> <a href="https://docs.google.com/forms/d/e/1FAIpQLSfudCq_YnUZVo33LSvARehYStfw3ulPlya4Xse6yYd3RDCLTw/viewform?usp=dialog" target="_blank">Link to your Google Form</a>
+                <ul>
+                    <li>You will be asked to provide:
+                        <ul>
+                            <li>Your Name / Pseudonym.</li>
+                            <li>A link to a GitHub Gist or Repository containing your <code>GWOModule</code> code.</li>
+                            <li>The calculated Descriptive Complexity (<code>C_D</code>) and a brief justification for it.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><strong>Review Process:</strong>
+                <ul>
+                    <li>All submissions will be manually reviewed by the maintainers to ensure they comply with these guidelines. We check for correctness, fairness, and honesty in the <code>C_D</code> calculation.</li>
+                    <li>Approved submissions will be run on our official benchmark hardware to ensure consistent <code>Latency</code> measurements.</li>
+                    <li>Once verified, your result will be added to the live leaderboard. Please allow for some time for this manual process.</li>
+                </ul>
+            </li>
+        </ol>
+        <p>By standardizing these conditions, we can confidently compare the architectural efficiency of diverse neural network operations. We look forward to seeing your innovative designs in the Arena.</p>
+        <hr>
+        <div style="text-align: center;">
+            <p>If you want to add your own operation to the leaderboard, please contact us using the methods below.</p>
+            <p>
+                Email: <a href="mailto:dafaafafaf33@gmail.com">dafaafafaf33@gmail.com</a>
+            </p>
+            <p>
+                Discord: <a href="https://discord.gg/tfuYKTGTk5" target="_blank">https://discord.gg/tfuYKTGTk5</a>
+            </p>
+            <p>
+                You can also add it from this <a href="https://docs.google.com/forms/d/e/1FAIpQLSfudCq_YnUZVo33LSvARehYStfw3ulPlya4Xse6yYd3RDCLTw/viewform?usp=dialog" target="_blank">link</a>.
+            </p>
+        </div>
     </div>
 </body>
 </html>
